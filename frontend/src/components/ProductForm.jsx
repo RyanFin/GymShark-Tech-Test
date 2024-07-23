@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 
-const ProductForm = ({ onChange, onViewPackSizes }) => {
+const ProductForm = ({ onChange, onViewPackSizes, onAddPackSize, onRemovePackSize }) => {
     const [number, setNumber] = useState('');
 
     useEffect(() => {
@@ -22,13 +22,21 @@ const ProductForm = ({ onChange, onViewPackSizes }) => {
             }}
         >
             <TextField
-                label="Enter Number"
+                label="Enter Order Size"
                 variant="outlined"
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
                 InputLabelProps={{ style: { color: '#ffffff' } }}
                 InputProps={{ style: { color: '#ffffff' } }}
             />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button type="button" variant="contained" color="primary" onClick={() => onAddPackSize(number)}>
+                    Add Pack Size
+                </Button>
+                <Button type="button" variant="contained" color="secondary" onClick={() => onRemovePackSize(number)}>
+                    Remove Pack Size
+                </Button>
+            </Box>
             <Button type="button" variant="contained" color="primary" onClick={() => onViewPackSizes()}>
                 View Pack Sizes
             </Button>

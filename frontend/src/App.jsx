@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import axios from 'axios';
-import { Container, CssBaseline, Typography, Box } from '@mui/material';
+import { Container, CssBaseline, Typography, Box, Snackbar, Alert } from '@mui/material';
 import ProductForm from './components/ProductForm';
 import ProductDisplay from './components/ProductDisplay';
 import PackSizesDisplay from './components/PackSizesDisplay';
@@ -9,6 +9,9 @@ import gymsharkLogo from '/gymshark-logo.png';
 const App = () => {
     const [product, setProduct] = useState(null);
     const [packSizes, setPackSizes] = useState([]);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const fetchProductData = useCallback(async (number) => {
         try {
@@ -28,6 +31,38 @@ const App = () => {
         }
     }, []);
 
+    const handleAddPackSize = useCallback(async (packsize) => {
+        try {
+            const response = await axios.post(`http://localhost:8080/add-packsize?packsize=${packsize}`);
+            setSnackbarMessage(`Successfully added pack size ${packsize}`);
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            fetchPackSizes();
+        } catch (error) {
+            setSnackbarMessage(`Error adding pack size ${packsize}`);
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
+        }
+    }, [fetchPackSizes]);
+
+    const handleRemovePackSize = useCallback(async (packsize) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/remove-packsize?packsize=${packsize}`);
+            setSnackbarMessage(`Successfully removed pack size ${packsize}`);
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            fetchPackSizes();
+        } catch (error) {
+            setSnackbarMessage(`Error removing pack size ${packsize}`);
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
+        }
+    }, [fetchPackSizes]);
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
     return (
         <Container
             component="main"
@@ -46,9 +81,23 @@ const App = () => {
                     Gymshark Tech
                 </Typography>
             </Box>
-            <ProductForm onChange={fetchProductData} onViewPackSizes={fetchPackSizes} />
+            <ProductForm 
+                onChange={fetchProductData} 
+                onViewPackSizes={fetchPackSizes} 
+                onAddPackSize={handleAddPackSize} 
+                onRemovePackSize={handleRemovePackSize} 
+            />
             {product && <ProductDisplay product={product} />}
             {packSizes.length > 0 && <PackSizesDisplay packSizes={packSizes} />}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };
