@@ -8,10 +8,14 @@ import (
 
 type Server struct {
 	router *gin.Engine
+	item   Item
 }
 
 func NewServer() (*Server, error) {
-	server := &Server{}
+
+	// Create an Items object with the provided name and price
+	item := NewItem("gymshark-vest-top", 15.99)
+	server := &Server{item: *item}
 
 	server.setupRouter()
 
@@ -33,6 +37,9 @@ func (server *Server) setupRouter() {
 
 	// routes
 	router.GET("/calculate-packs/:ordersize", server.calculatePacksHandler)
+	router.GET("/view-packsizes", server.getPackSizesHandler)
+	router.POST("/add-packsize", server.addPackSizeHandler)
+	router.DELETE("/remove-packsize", server.removePackSizeHandler)
 
 	server.router = router
 }
