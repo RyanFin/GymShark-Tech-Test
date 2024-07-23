@@ -8,10 +8,14 @@ import (
 
 type Server struct {
 	router *gin.Engine
+	item   Item
 }
 
 func NewServer() (*Server, error) {
-	server := &Server{}
+
+	// Create an Items object with the provided name and price
+	item := NewItem("gymshark-vest-top", 15.99)
+	server := &Server{item: *item}
 
 	server.setupRouter()
 

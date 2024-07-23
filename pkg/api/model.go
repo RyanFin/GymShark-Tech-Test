@@ -7,27 +7,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Items holds the pack sizes
-type Items struct {
+// Item holds the pack sizes
+type Item struct {
 	name      string
 	packSizes []int
 	price     float64
 }
 
-// NewItems creates a new Items struct with initialized pack sizes
-func NewItems(itemName string, price float64) *Items {
-	return &Items{
-		name:      itemName,
+// NewItem creates a new Item struct with initialized pack sizes
+func NewItem(itemName string, price float64) *Item {
+	return &Item{
+		name:      "gymshark-vest-top",
 		packSizes: []int{5000, 2000, 1000, 500, 250},
-		price:     price,
+		price:     15.99,
 	}
 }
 
 // Function to calculate the packs required
-func (i *Items) calculatePacks(orderSize int) map[int]int {
+func (i *Item) calculatePacks(orderSize int) map[int]int {
 	// Initialize a map to store the count of each pack size
 	packs := make(map[int]int)
-	// Copy of the orderSize to keep track of the remaining items
+	// Copy of the orderSize to keep track of the remaining item
 	remainingOrder := orderSize
 
 	// Iterate over each pack size in descending order
@@ -41,7 +41,7 @@ func (i *Items) calculatePacks(orderSize int) map[int]int {
 		}
 	}
 
-	// If there are any remaining items, add the smallest available pack (250)
+	// If there are any remaining item, add the smallest available pack (250)
 	if remainingOrder > 0 {
 		// increment the smallest item in the map (250) by 1
 		packs[250]++
@@ -71,6 +71,19 @@ func (i *Items) calculatePacks(orderSize int) map[int]int {
 	return packs
 }
 
+// removePackSize removes the first occurrence of size from the packSizes slice.
+func (i *Item) removePackSize(size int) {
+	for index, packSize := range i.packSizes {
+		if packSize == size {
+			// Remove the element by slicing around it
+			i.packSizes = append(i.packSizes[:index], i.packSizes[index+1:]...)
+			return
+		}
+	}
+}
+
+// Handler Functions
+
 type getOrderedPacksRequest struct {
 	// add binding for at least one item requested
 	OrderSize int64 `uri:"ordersize" binding:"required,min=1"`
@@ -86,25 +99,13 @@ func (server *Server) calculatePacksHandler(ctx *gin.Context) {
 		return
 	}
 
-	// Get name and price from query parameters
-	itemName := ctx.Query("name")
-	priceStr := ctx.Query("price")
-	price, err := strconv.ParseFloat(priceStr, 64)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	// Create an Items object with the provided name and price
-	items := NewItems(itemName, price)
-
 	// Calculate the packs
-	packs := items.calculatePacks(int(req.OrderSize))
+	packs := server.item.calculatePacks(int(req.OrderSize))
 
 	// Create the response struct
 	response := gin.H{
-		"name":  itemName,
-		"price": price,
+		"name":  server.item.name,
+		"price": server.item.price,
 		"packs": formatPacks(packs),
 	}
 
