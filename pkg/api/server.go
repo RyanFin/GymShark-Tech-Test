@@ -32,8 +32,7 @@ func (server *Server) setupRouter() {
 	}
 
 	// routes
-
-	router.GET("/calculate-packs/:ordersize", server.getOrderedPacks)
+	router.GET("/calculate-packs/:ordersize", server.calculatePacksHandler)
 
 	server.router = router
 }
