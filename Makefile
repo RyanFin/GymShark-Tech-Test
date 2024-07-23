@@ -15,4 +15,8 @@ swag:
 	cd backend && \
 	swag init
 
-.PHONY: server run swag test
+build:
+	cd backend && \
+	go build .
+
+.PHONY: server run swag test build
