@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Container, CssBaseline, Typography } from '@mui/material';
+import ProductForm from './components/ProductForm';
+import ProductDisplay from './components/ProductDisplay';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [product, setProduct] = useState(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    const fetchProductData = async (number) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/calculate-packs/${number}`);
+            setProduct(response.data);
+        } catch (error) {
+            console.error('Error fetching product data', error);
+        }
+    };
 
-export default App
+    return (
+        <Container component="main" maxWidth="sm">
+            <CssBaseline />
+            <Typography variant="h2" component="h1" gutterBottom align="center">
+                Gymshark Tech
+            </Typography>
+            <ProductForm onSubmit={fetchProductData} />
+            {product && <ProductDisplay product={product} />}
+        </Container>
+    );
+};
+
+export default App;

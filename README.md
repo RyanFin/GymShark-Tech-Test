@@ -56,6 +56,18 @@ go get -u github.com/swaggo/files
 - Generate swagger specs with: `$ swag init`
 - Visit swagger docs at this URL: http://localhost:8080/docs/index.html
 
+#### Requests
+```
+curl --location 'http://localhost:8080/calculate-packs/770'
+
+curl --location 'http://localhost:8080/view-packsizes'
+
+curl --location --request DELETE 'http://localhost:8080/remove-packsize?packsize=1000'
+
+curl --location --request POST 'http://localhost:8080/add-packsize?packsize=800'
+
+```
+
 ## Test Notes
 ```
 --- FAIL: TestCalculatePacks (0.00s)
