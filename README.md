@@ -51,3 +51,4 @@ FAIL
 ```
 - Currently getting the wrong amount of packs for this test case. I should get one pack rather than 2 X 250 when the order size = 251.
 
+Solution: Add logic to combine smaller packs into a larger one

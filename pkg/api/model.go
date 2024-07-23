@@ -32,10 +32,6 @@ func (i *Items) calculatePacks(orderSize int) map[int]int {
 
 	// Iterate over each pack size in descending order
 	for _, size := range i.packSizes {
-		// If there are no remaining items to pack, exit the loop
-		if remainingOrder == 0 {
-			break
-		}
 		// If the remaining order is larger than or equal to the current pack size
 		if remainingOrder >= size {
 			// Calculate how many packs of the current size are needed
@@ -51,27 +47,22 @@ func (i *Items) calculatePacks(orderSize int) map[int]int {
 		packs[250]++
 	}
 
-	// Check if it's beneficial to combine smaller packs into a larger one
-	for size := range packs {
-		// Skip pack sizes larger than 250 as we're focusing on combining smaller packs
-		if size > 250 {
-			continue
-		}
-		// Iterate over pack sizes from the smallest to largest (excluding the largest)
-		for j := len(i.packSizes) - 1; j > 0; j-- {
-			// If the current pack size matches and we have more than one of these packs
-			if size == i.packSizes[j] && packs[size] > 1 {
-				// Determine the next larger pack size
-				largerPack := i.packSizes[j-1]
-				// Calculate how many larger packs would be equivalent to the smaller packs
-				largerPackCount := (packs[size] * size) / largerPack
-				// If the smaller packs can be perfectly combined into larger packs
-				if (packs[size]*size)%largerPack == 0 {
-					// Update the map with the count of the larger packs
-					packs[largerPack] = largerPackCount
-					// Remove the smaller packs from the map
-					delete(packs, size)
-				}
+	// Combine smaller packs into larger ones if beneficial
+	// We iterate through pack sizes from smallest to largest
+	for j := len(i.packSizes) - 1; j > 0; j-- {
+		// Determine the current and next larger pack size
+		currentPack := i.packSizes[j]
+		nextPack := i.packSizes[j-1]
+
+		// Check if we have multiple smaller packs that can be combined into a larger pack
+		if count, exists := packs[currentPack]; exists && count > 1 {
+			// Calculate how many larger packs can be formed from the smaller packs
+			largerPackCount := (count * currentPack) / nextPack
+			if (count*currentPack)%nextPack == 0 {
+				// Update the map with the count of the larger packs
+				packs[nextPack] = largerPackCount
+				// Remove the smaller packs from the map
+				delete(packs, currentPack)
 			}
 		}
 	}
