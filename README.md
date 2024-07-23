@@ -39,3 +39,15 @@ Optional:
 	•	Create a UI to interact with your API
 Please also send us your code via a publicly accessible git repository, GitHub or similar is fine, and deploy your application to an online environment so that we can access it and test your application out.
 We look forward to receiving your application! Please return your completed solution to talent@gymshark.com by 1pm on Monday 29th July 2024. From here, we look forward to welcoming you into the office on Monday 5th August! 
+
+## Development Notes
+
+## Test Notes
+```
+--- FAIL: TestCalculatePacks (0.00s)
+    --- FAIL: TestCalculatePacks/Order_size_just_higher_than_the_smallest_pack_size (0.00s)
+        model_test.go:59: calculatePacks(251) = map[250:2]; want map[500:1]
+FAIL
+```
+- Currently getting the wrong amount of packs for this test case. I should get one pack rather than 2 X 250 when the order size = 251.
+
