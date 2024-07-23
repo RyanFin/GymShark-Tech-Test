@@ -80,10 +80,15 @@ func (i *Items) calculatePacks(orderSize int) map[int]int {
 	return packs
 }
 
+type getOrderedPacksRequest struct {
+	// add binding for at least one item requested
+	OrderSize int64 `uri:"ordersize" binding:"required,min=1"`
+}
+
 func (server *Server) getOrderedPacks(ctx *gin.Context) {
+	var req getOrderedPacksRequest
 	// Get the order size from the URL parameter
-	orderSizeStr := ctx.Param("orderSize")
-	orderSize, err := strconv.Atoi(orderSizeStr)
+	err := ctx.ShouldBindUri(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -102,7 +107,7 @@ func (server *Server) getOrderedPacks(ctx *gin.Context) {
 	items := NewItems(itemName, price)
 
 	// Calculate the packs
-	packs := items.calculatePacks(orderSize)
+	packs := items.calculatePacks(int(req.OrderSize))
 
 	// Create the response
 	response := gin.H{}
