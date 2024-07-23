@@ -1,0 +1,93 @@
+info:
+  contact: {}
+paths:
+  /add-pack-size:
+    post:
+      description: Add a new pack size to the item
+      parameters:
+      - description: Pack Size
+        in: query
+        name: packsize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add pack size
+      tags:
+      - packs
+  /calculate-packs/{ordersize}:
+    get:
+      description: Calculate the required packs for a given order size
+      parameters:
+      - description: Order Size
+        in: path
+        name: ordersize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Calculate packs
+      tags:
+      - packs
+  /pack-sizes:
+    get:
+      description: Get the available pack sizes for the item
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get pack sizes
+      tags:
+      - packs
+  /remove-pack-size:
+    delete:
+      description: Remove a pack size from the item
+      parameters:
+      - description: Pack Size
+        in: query
+        name: packsize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Remove pack size
+      tags:
+      - packs
+swagger: "2.0"

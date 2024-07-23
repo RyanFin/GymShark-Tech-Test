@@ -135,6 +135,12 @@ func (i *Item) addPackSize(size int) {
 
 // Handler Functions
 
+// @Summary Get pack sizes
+// @Description Get the available pack sizes for the item
+// @Tags packs
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /pack-sizes [get]
 func (server *Server) getPackSizesHandler(ctx *gin.Context) {
 	packSizes := server.item.viewPackSizes()
 	response := gin.H{
@@ -149,6 +155,14 @@ type getOrderedPacksRequest struct {
 	OrderSize int64 `uri:"ordersize" binding:"required,min=1"`
 }
 
+// @Summary Calculate packs
+// @Description Calculate the required packs for a given order size
+// @Tags packs
+// @Produce json
+// @Param ordersize path int true "Order Size"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /calculate-packs/{ordersize} [get]
 func (server *Server) calculatePacksHandler(ctx *gin.Context) {
 	var req getOrderedPacksRequest
 
@@ -182,7 +196,14 @@ func formatPacks(packs map[int]int) gin.H {
 	return formattedPacks
 }
 
-// removePackSizeHandler handles removing a pack size
+// @Summary Remove pack size
+// @Description Remove a pack size from the item
+// @Tags packs
+// @Produce json
+// @Param packsize query int true "Pack Size"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /remove-pack-size [delete]
 func (server *Server) removePackSizeHandler(ctx *gin.Context) {
 	// Extract the pack size from the query parameter
 	packSizeStr := ctx.DefaultQuery("packsize", "")
@@ -211,7 +232,14 @@ func (server *Server) removePackSizeHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Pack size removed successfully"})
 }
 
-// addPackSizeHandler handles adding a new pack size
+// @Summary Add pack size
+// @Description Add a new pack size to the item
+// @Tags packs
+// @Produce json
+// @Param packsize query int true "Pack Size"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /add-pack-size [post]
 func (server *Server) addPackSizeHandler(ctx *gin.Context) {
 	// Extract the pack size from the query parameter
 	packSizeStr := ctx.DefaultQuery("packsize", "")

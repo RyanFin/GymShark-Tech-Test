@@ -1,1 +1,7 @@
-coverage.out
+node_modules
+
+# Editor directories and files
+.DS_Store
+*.bac
+
+backend/coverage.out
