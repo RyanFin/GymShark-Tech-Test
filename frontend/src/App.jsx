@@ -3,10 +3,12 @@ import axios from 'axios';
 import { Container, CssBaseline, Typography, Box } from '@mui/material';
 import ProductForm from './components/ProductForm';
 import ProductDisplay from './components/ProductDisplay';
+import PackSizesDisplay from './components/PackSizesDisplay';
 import gymsharkLogo from '/gymshark-logo.png';
 
 const App = () => {
     const [product, setProduct] = useState(null);
+    const [packSizes, setPackSizes] = useState([]);
 
     const fetchProductData = useCallback(async (number) => {
         try {
@@ -14,6 +16,15 @@ const App = () => {
             setProduct(response.data);
         } catch (error) {
             console.error('Error fetching product data', error);
+        }
+    }, []);
+
+    const fetchPackSizes = useCallback(async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/view-packsizes`);
+            setPackSizes(response.data.packSizes);
+        } catch (error) {
+            console.error('Error fetching pack sizes', error);
         }
     }, []);
 
@@ -35,8 +46,9 @@ const App = () => {
                     Gymshark Tech
                 </Typography>
             </Box>
-            <ProductForm onChange={fetchProductData} />
+            <ProductForm onChange={fetchProductData} onViewPackSizes={fetchPackSizes} />
             {product && <ProductDisplay product={product} />}
+            {packSizes.length > 0 && <PackSizesDisplay packSizes={packSizes} />}
         </Container>
     );
 };
