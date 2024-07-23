@@ -4,6 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files" // This is the correct import
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	// DO NOT FORGET TO ADD DOCS PATH!
+	// Get the prefix from the go.,mod file
+	_ "GymShark-Tech-Test/docs"
 )
 
 type Server struct {
@@ -36,6 +42,9 @@ func (server *Server) setupRouter() {
 	}
 
 	// routes
+	// Swagger documentation path
+	// http://localhost:8080/docs/index.html
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/calculate-packs/:ordersize", server.calculatePacksHandler)
 	router.GET("/view-packsizes", server.getPackSizesHandler)
 	router.POST("/add-packsize", server.addPackSizeHandler)

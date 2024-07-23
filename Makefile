@@ -11,4 +11,8 @@ run:
 	cd frontend && \
 	npm run dev
 
-.PHONY: server run test
+swag:
+	cd backend && \
+	swag init
+
+.PHONY: server run swag test

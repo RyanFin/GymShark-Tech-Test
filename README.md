@@ -41,6 +41,20 @@ Please also send us your code via a publicly accessible git repository, GitHub o
 We look forward to receiving your application! Please return your completed solution to talent@gymshark.com by 1pm on Monday 29th July 2024. From here, we look forward to welcoming you into the office on Monday 5th August! 
 
 ## Development Notes
+### Swagger
+
+- [Swagger with Gin](https://santoshk.dev/posts/2022/how-to-integrate-swagger-ui-in-go-backend-gin-edition/)
+  - docs/swagger.json and docs/swagger.yaml are the actual specification which you can upload to services like AWS API Gateway and similar services.
+    Install gin-swagger
+
+```
+go get -u github.com/swaggo/swag/cmd/swag
+go get -u github.com/swaggo/gin-swagger
+go get -u github.com/swaggo/files
+```
+
+- Generate swagger specs with: `$ swag init`
+- Visit swagger docs at this URL: http://localhost:8080/docs/index.html
 
 ## Test Notes
 ```
@@ -52,3 +66,5 @@ FAIL
 - Currently getting the wrong amount of packs for this test case. I should get one pack rather than 2 X 250 when the order size = 251.
 
 Solution: Add logic to combine smaller packs into a larger one
+
+
