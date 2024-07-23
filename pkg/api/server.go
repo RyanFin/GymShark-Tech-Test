@@ -39,6 +39,7 @@ func (server *Server) setupRouter() {
 	router.GET("/calculate-packs/:ordersize", server.calculatePacksHandler)
 	router.GET("/view-packsizes", server.getPackSizesHandler)
 	router.POST("/add-packsize", server.addPackSizeHandler)
+	router.DELETE("/remove-packsize", server.removePackSizeHandler)
 
 	server.router = router
 }

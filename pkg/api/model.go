@@ -155,6 +155,35 @@ func formatPacks(packs map[int]int) gin.H {
 	return formattedPacks
 }
 
+// removePackSizeHandler handles removing a pack size
+func (server *Server) removePackSizeHandler(ctx *gin.Context) {
+	// Extract the pack size from the query parameter
+	packSizeStr := ctx.DefaultQuery("packsize", "")
+	if packSizeStr == "" {
+		ctx.JSON(http.StatusBadRequest, errorResponse(fmt.Errorf("packsize parameter is required")))
+		return
+	}
+
+	// Convert the pack size to an integer
+	packSize, err := strconv.Atoi(packSizeStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Ensure the pack size is positive
+	if packSize <= 0 {
+		ctx.JSON(http.StatusBadRequest, errorResponse(fmt.Errorf("packsize must be a positive integer")))
+		return
+	}
+
+	// Remove the pack size from the item
+	server.item.removePackSize(packSize)
+
+	// Return a success response
+	ctx.JSON(http.StatusOK, gin.H{"message": "Pack size removed successfully"})
+}
+
 // addPackSizeHandler handles adding a new pack size
 func (server *Server) addPackSizeHandler(ctx *gin.Context) {
 	// Extract the pack size from the query parameter
