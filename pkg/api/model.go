@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"sort"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -24,8 +25,34 @@ func NewItem(itemName string, price float64) *Item {
 	}
 }
 
+// Function to ensure packSizes is unique and sorted in descending order
+func (i *Item) preparePackSizes() {
+	// Remove duplicates
+	uniquePackSizes := make(map[int]struct{})
+	for _, size := range i.packSizes {
+		uniquePackSizes[size] = struct{}{}
+	}
+
+	// Convert map keys to a slice
+	distinctSizes := make([]int, 0, len(uniquePackSizes))
+	for size := range uniquePackSizes {
+		distinctSizes = append(distinctSizes, size)
+	}
+
+	// Sort slice in descending order
+	sort.Sort(sort.Reverse(sort.IntSlice(distinctSizes)))
+
+	// Assign the cleaned and sorted slice back to packSizes
+	i.packSizes = distinctSizes
+}
+
 // Function to calculate the packs required
 func (i *Item) calculatePacks(orderSize int) map[int]int {
+	// Ensure packSizes is unique and sorted
+	i.preparePackSizes()
+
+	// fmt.Println("Pack sizes:", i.packSizes)
+
 	// Initialize a map to store the count of each pack size
 	packs := make(map[int]int)
 	// Copy of the orderSize to keep track of the remaining item
@@ -42,9 +69,9 @@ func (i *Item) calculatePacks(orderSize int) map[int]int {
 		}
 	}
 
-	// If there are any remaining item, add the smallest available pack (250)
+	// If there are any remaining items, add the smallest available pack (250)
 	if remainingOrder > 0 {
-		// increment the smallest item in the map (250) by 1
+		// Increment the smallest item in the map (250) by 1
 		packs[250]++
 	}
 
