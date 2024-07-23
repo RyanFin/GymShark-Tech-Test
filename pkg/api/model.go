@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -82,7 +83,39 @@ func (i *Item) removePackSize(size int) {
 	}
 }
 
+// view packsizes for the item
+func (i Item) viewPackSizes() []int {
+	return i.packSizes
+}
+
+// Add a new pack size to the item
+func (i *Item) addPackSize(size int) {
+
+	// Ensure the pack size is positive
+	if size <= 0 {
+		return
+	}
+
+	// Add the pack size if it's not already present
+	for _, packSize := range i.packSizes {
+		if packSize == size {
+			// Pack size already exists
+			return
+		}
+	}
+	i.packSizes = append(i.packSizes, size)
+}
+
 // Handler Functions
+
+func (server *Server) getPackSizesHandler(ctx *gin.Context) {
+	packSizes := server.item.viewPackSizes()
+	response := gin.H{
+		"packSizes": packSizes,
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
 
 type getOrderedPacksRequest struct {
 	// add binding for at least one item requested
@@ -120,4 +153,33 @@ func formatPacks(packs map[int]int) gin.H {
 		formattedPacks[strconv.Itoa(k)] = v
 	}
 	return formattedPacks
+}
+
+// addPackSizeHandler handles adding a new pack size
+func (server *Server) addPackSizeHandler(ctx *gin.Context) {
+	// Extract the pack size from the query parameter
+	packSizeStr := ctx.DefaultQuery("packsize", "")
+	if packSizeStr == "" {
+		ctx.JSON(http.StatusBadRequest, errorResponse(fmt.Errorf("packsize parameter is required")))
+		return
+	}
+
+	// Convert the pack size to an integer
+	packSize, err := strconv.Atoi(packSizeStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Ensure the pack size is positive
+	if packSize <= 0 {
+		ctx.JSON(http.StatusBadRequest, errorResponse(fmt.Errorf("packsize must be a positive integer")))
+		return
+	}
+
+	// Add the pack size to the item
+	server.item.addPackSize(packSize)
+
+	// Return a success response
+	ctx.JSON(http.StatusOK, gin.H{"message": "Pack size added successfully"})
 }

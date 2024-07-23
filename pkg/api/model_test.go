@@ -111,3 +111,60 @@ func TestRemovePackSize(t *testing.T) {
 		})
 	}
 }
+
+// Helper function to create an Item with predefined pack sizes
+func newTestItem() *Item {
+	return &Item{
+		name:      "gymshark-vest-top",
+		packSizes: []int{5000, 2000, 1000, 500, 250},
+		price:     15.99,
+	}
+}
+
+// Test the addPackSize method
+func TestAddPackSize(t *testing.T) {
+	tests := []struct {
+		name          string
+		initialSizes  []int
+		newSize       int
+		expectedSizes []int
+	}{
+		{
+			name:          "Add new pack size",
+			initialSizes:  []int{5000, 2000, 1000, 500, 250},
+			newSize:       100,
+			expectedSizes: []int{5000, 2000, 1000, 500, 250, 100},
+		},
+		{
+			name:          "Add existing pack size",
+			initialSizes:  []int{5000, 2000, 1000, 500, 250},
+			newSize:       500,
+			expectedSizes: []int{5000, 2000, 1000, 500, 250},
+		},
+		{
+			name:          "Add invalid pack size (negative)",
+			initialSizes:  []int{5000, 2000, 1000, 500, 250},
+			newSize:       -100,
+			expectedSizes: []int{5000, 2000, 1000, 500, 250},
+		},
+		{
+			name:          "Add invalid pack size (zero)",
+			initialSizes:  []int{5000, 2000, 1000, 500, 250},
+			newSize:       0,
+			expectedSizes: []int{5000, 2000, 1000, 500, 250},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			item := newTestItem()
+			item.packSizes = tt.initialSizes
+
+			item.addPackSize(tt.newSize)
+
+			if !reflect.DeepEqual(item.packSizes, tt.expectedSizes) {
+				t.Errorf("Expected %v, but got %v", tt.expectedSizes, item.packSizes)
+			}
+		})
+	}
+}
