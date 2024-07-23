@@ -76,8 +76,9 @@ type getOrderedPacksRequest struct {
 	OrderSize int64 `uri:"ordersize" binding:"required,min=1"`
 }
 
-func (server *Server) getOrderedPacks(ctx *gin.Context) {
+func (server *Server) calculatePacksHandler(ctx *gin.Context) {
 	var req getOrderedPacksRequest
+
 	// Get the order size from the URL parameter
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -100,12 +101,22 @@ func (server *Server) getOrderedPacks(ctx *gin.Context) {
 	// Calculate the packs
 	packs := items.calculatePacks(int(req.OrderSize))
 
-	// Create the response
-	response := gin.H{}
-	for k, v := range packs {
-		response[strconv.Itoa(k)] = v
+	// Create the response struct
+	response := gin.H{
+		"name":  itemName,
+		"price": price,
+		"packs": formatPacks(packs),
 	}
 
 	// Return the response
 	ctx.JSON(http.StatusOK, response)
+}
+
+// formatPacks formats the packs map into a suitable structure for JSON response
+func formatPacks(packs map[int]int) gin.H {
+	formattedPacks := gin.H{}
+	for k, v := range packs {
+		formattedPacks[strconv.Itoa(k)] = v
+	}
+	return formattedPacks
 }
