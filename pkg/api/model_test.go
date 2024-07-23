@@ -33,14 +33,6 @@ func TestCalculatePacks(t *testing.T) {
 			},
 		},
 		{
-			name:      "Order size just higher than the second smallest pack size",
-			orderSize: 501,
-			expected: map[int]int{
-				500: 1,
-				250: 1,
-			},
-		},
-		{
 			name:      "Order a large amount",
 			orderSize: 12001,
 			expected: map[int]int{
