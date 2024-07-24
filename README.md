@@ -1,6 +1,8 @@
 # GymShark-Tech-Test
 Golang Tech Test for Gymshark.
+
 [Project Website](https://gymshark-tech-frontend-b76d4f0427cb.herokuapp.com/)
+
 [My Deployment Experience Medium Article](https://medium.com/@ryanfinlayson125/hosting-a-full-stack-application-on-heroku-golang-backend-and-react-frontend-b3bd19f9120a)
 
 Software Engineering Challenge
