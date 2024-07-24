@@ -17,6 +17,12 @@ swag:
 
 build:
 	cd backend && \
-	go build .
+	GOOS=linux GOARCH=amd64 go build -o GymShark-Tech-Test
 
-.PHONY: server run swag test build
+log-fe:
+	heroku logs --tail -a gymshark-tech-frontend 
+
+log-be:
+	heroku logs --tail -a gymshark-tech-backend 
+
+.PHONY: server run swag test build log-fe log-be

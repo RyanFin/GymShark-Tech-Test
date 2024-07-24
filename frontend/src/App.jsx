@@ -13,9 +13,12 @@ const App = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    // const backendUrl = "http://localhost:8080";
+
     const fetchProductData = useCallback(async (number) => {
         try {
-            const response = await axios.get(`http://localhost:8080/calculate-packs/${number}`);
+            const response = await axios.get(`${backendUrl}/calculate-packs/${number}`);
             setProduct(response.data);
         } catch (error) {
             console.error('Error fetching product data', error);
@@ -24,7 +27,7 @@ const App = () => {
 
     const fetchPackSizes = useCallback(async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/view-packsizes`);
+            const response = await axios.get(`${backendUrl}/view-packsizes`);
             setPackSizes(response.data.packSizes);
         } catch (error) {
             console.error('Error fetching pack sizes', error);
@@ -33,7 +36,7 @@ const App = () => {
 
     const handleAddPackSize = useCallback(async (packsize) => {
         try {
-            const response = await axios.post(`http://localhost:8080/add-packsize?packsize=${packsize}`);
+            const response = await axios.post(`${backendUrl}add-packsize?packsize=${packsize}`);
             setSnackbarMessage(`Successfully added pack size ${packsize}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
@@ -47,7 +50,7 @@ const App = () => {
 
     const handleRemovePackSize = useCallback(async (packsize) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/remove-packsize?packsize=${packsize}`);
+            const response = await axios.delete(`${backendUrl}/remove-packsize?packsize=${packsize}`);
             setSnackbarMessage(`Successfully removed pack size ${packsize}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
