@@ -13,12 +13,13 @@ const App = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    // const backendUrl = process.env.REACT_APP_BACKEND_URL;
     // const backendUrl = "http://localhost:8080";
 
     const fetchProductData = useCallback(async (number) => {
         try {
-            const response = await axios.get(`${backendUrl}/calculate-packs/${number}`);
+            // api call with endpoint URL loaded from Heroku
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/calculate-packs/${number}`);
             setProduct(response.data);
         } catch (error) {
             console.error('Error fetching product data', error);
@@ -27,7 +28,7 @@ const App = () => {
 
     const fetchPackSizes = useCallback(async () => {
         try {
-            const response = await axios.get(`${backendUrl}/view-packsizes`);
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/view-packsizes`);
             setPackSizes(response.data.packSizes);
         } catch (error) {
             console.error('Error fetching pack sizes', error);
@@ -36,7 +37,7 @@ const App = () => {
 
     const handleAddPackSize = useCallback(async (packsize) => {
         try {
-            const response = await axios.post(`${backendUrl}add-packsize?packsize=${packsize}`);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/add-packsize?packsize=${packsize}`);
             setSnackbarMessage(`Successfully added pack size ${packsize}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
@@ -50,7 +51,7 @@ const App = () => {
 
     const handleRemovePackSize = useCallback(async (packsize) => {
         try {
-            const response = await axios.delete(`${backendUrl}/remove-packsize?packsize=${packsize}`);
+            const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/remove-packsize?packsize=${packsize}`);
             setSnackbarMessage(`Successfully removed pack size ${packsize}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);

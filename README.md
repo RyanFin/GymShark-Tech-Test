@@ -81,5 +81,5 @@ Solution: Add logic to combine smaller packs into a larger one
 
 ## DevOps
 - [Remove Heroku remote](https://stackoverflow.com/questions/24071375/how-do-i-remove-references-to-an-old-heroku-app-in-local-git-folder)
-
+- Separate Heroku projects for the frontend and the backend (separate git init), all under one git repo for github
 
