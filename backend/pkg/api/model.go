@@ -19,9 +19,9 @@ type Item struct {
 // NewItem creates a new Item struct with initialized pack sizes
 func NewItem(itemName string, price float64) *Item {
 	return &Item{
-		name:      "gymshark-vest-top",
+		name:      itemName,
 		packSizes: []int{5000, 2000, 1000, 500, 250},
-		price:     15.99,
+		price:     price,
 	}
 }
 
