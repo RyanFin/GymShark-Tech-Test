@@ -83,4 +83,5 @@ FAIL
 
 Solution: Add logic to combine smaller packs into a larger one
 
-
+## Feedback
+- Ensure that I understand how an application like this can be deployed using Infrastructure-as-a-Service (IaaS) platforms such as Terraform.
